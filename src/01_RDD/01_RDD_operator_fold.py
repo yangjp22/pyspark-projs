@@ -12,6 +12,6 @@ if __name__ == "__main__":
 
     rdd = sc.parallelize([1, 2, 3, 4, 5, 6, 7, 8, 9], 1)
     print(rdd.fold(10, lambda x, y: x + y))
-    
+
     rdd2 = sc.parallelize([1, 2, 3, 4, 5, 6, 7, 8, 9], 3)
     print(rdd2.fold(10, lambda x, y: x + y))
