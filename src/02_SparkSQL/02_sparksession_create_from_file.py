@@ -2,6 +2,8 @@
 
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SparkSession  # SparkSQL中的入口对象是SparkSession对象
+from pyspark.sql.types import StructType, StringType
+
 import os
 
 os.environ["PYSPARK_PYTHON"] = "../../venv/bin/python"
@@ -19,17 +21,26 @@ if __name__ == "__main__":
 
     sc = spark.sparkContext   # 可以通过SparkSession对象的sparkContext属性获取 可用于SparkCore的sc对象
 
-    df = spark.read.csv("../stu_score.txt", sep=',', header=False)
-    df2 = df.toDF('id', 'name', 'score')
-    # df2.printSchema()
-    # df2.show()
+    # from text file
+    schema = StructType().add("data", StringType(), nullable=True)
+    df_txt = spark.read.format("text").\
+        schema(schema=schema).\
+        load("../stu_score.txt")
+    # df_txt.printSchema()
+    # df_txt.show()
 
-    df2.createTempView('score')   # 创建一个临时视图, 视图名称是叫score
+    # from json file
+    df_json = spark.read.format("json").\
+        load("../stu_score.json")
+    # df_json.printSchema()
+    # df_json.show()
 
-    #  SQL 风格
-    spark.sql('''
-        SELECT * FROM score WHERE name='语文'
-    ''').show()
-
-    # DSL 风格
-    df2.where("name='语文'").show()
+    # from csv file
+    df_csv = spark.read.format("csv").\
+        option("sep", ",").\
+        option("header", True).\
+        option("encoding", "utf-8").\
+        schema("id INTEGER, subject STRING, score INTEGER").\
+        load("../stu_score.csv")
+    df_csv.printSchema()
+    df_csv.show()
