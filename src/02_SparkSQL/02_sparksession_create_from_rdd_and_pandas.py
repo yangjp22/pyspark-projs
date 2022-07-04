@@ -48,18 +48,3 @@ if __name__ == "__main__":
     # 从pandas中的DataFrame创建
     # pd_df = pandas.DataFrame(...)
     # spark.createDataFrame(pd_df)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
